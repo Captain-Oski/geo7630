@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>View local GeoJSON</title>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+	<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<style>
+		#file {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	</style>
+	<div id="map"></div>
+	<input type="file" id="file" name="file" accept="application/geo+json,application/vnd.geo+json,.geojson,application/json" />
+	<script>
+		
+		var map = new maplibregl.Map({
+			container: 'map',
+			style:
+			{
+				'version': 8,
+				'glyphs': "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+				'sources': {
+					'raster-tiles': {
+						'type': 'raster',
+						'tiles': [
+							'http://stamen-tiles-d.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png'
+						],
+						'tileSize': 256,
+						'attribution':
+							'Map tiles by <a target="_top" rel="noopener" href="http://stamen.com">Stamen Design</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>'
+					}
+				}
+				, 'layers': [
+					{
+						'id': 'simple-tiles',
+						'type': 'raster',
+						'source': 'raster-tiles',
+						'minzoom': 0,
+						'maxzoom': 22
+					}]
+			},
+			center: [-73.55392401446137, 45.50245825854543],
+			pitch: 60, // pitch in degrees
+			bearing: -60, // bearing in degrees
+			zoom: 15,
+			antialias: true
+		});
+
+			map.on('idle', (e) => {
+				// console.log(e)
+				console.log(map.getPitch())
+				console.log(map.getZoom())
+			})
+
+		function handleFileSelect(evt) {
+			var file = evt.target.files[0]; // Read first selected file
+			console.log(file)
+			var reader = new FileReader();
+
+			reader.onload = function (theFile) {
+				// Parse as (geo)JSON
+				var geoJSONcontent = JSON.parse(theFile.target.result);
+
+				map.addSource('uploaded-source', {
+					'type': 'geojson',
+					'data': geoJSONcontent
+				});
+
+				map.addLayer({
+					'id': 'room-extrusion',
+					'type': 'fill-extrusion',
+					'source': 'uploaded-source',
+					'paint': {
+						// See the MapLibre Style Specification for details on data expressions.
+						// https://maplibre.org/maplibre-gl-js-docs/style-spec/expressions/
+
+						// Get the fill-extrusion-color from the source 'color' property.
+						'fill-extrusion-color': ['get', '_output_color'],
+
+						// Get fill-extrusion-height from the source 'height' property.
+						'fill-extrusion-height': ['get', 'z'],
+
+						// // Get fill-extrusion-base from the source 'base_height' property.
+						// 'fill-extrusion-base': ['get', 'z'],
+
+						// Make extrusions slightly opaque for see through indoor walls.
+						'fill-extrusion-opacity': 0.9
+					}
+				});
+			};
+
+			// Read the GeoJSON as text
+			reader.readAsText(file, 'UTF-8');
+		}
+		document
+			.getElementById('file')
+			.addEventListener('change', handleFileSelect, false);
+
+
+	</script>
+
+</body>
+
+</html>

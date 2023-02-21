@@ -1,5 +1,8 @@
 .env
 .log
 Laboratoires/Lab2/data/*
+Laboratoires/Lab3/data/*
+Laboratoires/Lab3/results/*.json
 *.recover
 *.log
+*.zip
