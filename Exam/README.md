@@ -1,5 +1,4 @@
 GEO 7630 examen #1 
-https://docs.google.com/document/d/1sCWrVQh-RAcwY9ogdAx01SCETDYUs7FFL8Yne13v9Gs
 
 21 février 2023 14h00 
 
@@ -10,28 +9,28 @@ Chargé de cours : Clément Glogowski
 Démonstratrice : Maddie Le Gall
 
 
-# Information sur l’examen (1h30)
+# Micro TP FME
 
-1. Depuis votre “fork” git il faudra aller télécharger les questions 
+Vous devrez produire une couche d’index H3 qui représente la quantité de commerces vacants dans chacun des hexagones.
 
-   1. git pull upstream …
+**INPUT **: Couches de commerces : [geojson](https://data.montreal.ca/dataset/f8582c4d-a933-4306-bb27-d883e13dd207/resource/7e736f37-c935-4028-8ffe-02e1403c1eaa/download/occupation-commerciale-2022.geojson)
 
-2. Dépôt créer une branche exam1
+**INPUT **: Couche pour créer les hexagones de remplissage : [geojson](https://data.montreal.ca/dataset/b628f1da-9dc3-4bb1-9875-1470f891afb1/resource/92cb062a-11be-4222-9ea5-867e7e64c5ff/download/limites-terrestres.geojson)
 
-3. Répondre aux questions directement dans le EXAM.md qui sera fourni
+Il faudra ajouter un **vertexCreator** pour définir les coordonnées x et y (long,lat) pour la couche des commerces.
 
-   1. Jeux des erreurs sur une image qui montre des interfaces cartographiques
-   2. Identification des techniques de visualisation
-   3. Questions à très court développement sur les bonnes pratiques d’intégration
-   4. QCM sur le matricielle
-   5. QCM sur le vectorielle
-   6. QCM sur le 3D
-   7. …
+Vous devrez **filtrer **les commerces pour avoir seulement les commerces vacants
 
-4. Créer un workbench FME  en suivant les consignes qui seront données et le mettre dans le dépôt
+**Propriété : USAGE1**
 
-   1. geojson url, raster, h3, vecteurs, tester, logger etc…
+La taille de vos hexagones doit être de résolution 9 (0.2km par segments).
 
-5. Commiter les changements (commit)
+**Astuces **: 54 est le nombre de commerces dans le polygone avec le plus de commerces vacants
 
-6. Mettre à jour le dépôt (push)
+**OUTPUT** : 
+
+Votre WRITER devra écrire dans la base de données POSTGIS geo7630 comme ceci :
+
+![](https://lh3.googleusercontent.com/FsUKihCYfZX7SYD-Y0XHa9js978zNkFqZJjfNyAwcvux_0xoVJXT4QK9gRl0SjP1Q8tNUmYeZnxCzJVoWsGRiQwp8b3YrqQAlUPlZQKTT7pAeDquANEzRIBz3bfmAdfH9QDuNpuhdRnbNY-Yvjm0xbk)
+
+![](https://lh5.googleusercontent.com/H1BwZp2XawUD9Xc-FqGnKe6LrvIzGbZ7bsnhN7fZzk3CN2ZWnxv7qLhoA9XmYAKaKG45g_pb7_1Z5fuoK7dJ29nLt4hiYU4PNVCLlEm7TCD8N4FU4j5OMlMZe9KdTWpFvIENoLqa5YvQDvO4vMDC5Ms)
