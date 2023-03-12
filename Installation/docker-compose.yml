@@ -10,42 +10,34 @@ services:
     - ./create_postgres_stack.sql:/docker-entrypoint-initdb.d/create_postgres_stack.sql
     - pgdata:/var/lib/postgresql/data
     restart: always
-  # pg_tileserv:
-  #   image: "pramsey/pg_tileserv:latest"
-  #   ports:
-  #   - 8801:7800
-  #   environment:
-  #     ## CHANGE connection string from .env file
-  #   - DATABASE_URL=${DATABASE_URL_GEO7630}
-  #   # volumes:
-  #   # - ./pg_tileserv.toml:/etc/pg_tileserv.toml
-  #   depends_on:
-  #   - "pg"
-  #   restart: always
-  # pg_featureserv:
-  #   image: "pramsey/pg_featureserv:latest"
-  #   ports:
-  #   - 9000:9000
-  #   environment:
-  #     ## CHANGE connection string from .env file
-  #   - DATABASE_URL=${DATABASE_URL_GEO7630}
-  #   depends_on:
-  #   - "pg"
-  #   restart: always
-  #   geoserver:
-  #      image: geosolutionsit/geoserver
-  #      ports:
-  #      - 8080:8080
-  #      environment:
-  #      - INSTALL_EXTENSIONS=true
-  #     - STABLE_EXTENSIONS="PGRaster"
-  #   titiler:
-  #    image: "developmentseed/titiler"
-  #    ports:
-  #      - 8000:8000
-  #     environment:
-  #      - PORT=8000
-  #      - WORKERS_PER_CORE=1
+  pg_tileserv:
+    image: "pramsey/pg_tileserv:latest"
+    ports:
+    - 8801:7800
+    environment:
+    - DATABASE_URL=${DATABASE_URL_GEO7630}
+    volumes:
+    - ./pg_tileserv.toml:/etc/pg_tileserv.toml
+    depends_on:
+    - "pg"
+    restart: always
+  pg_featureserv:
+    image: "pramsey/pg_featureserv:latest"
+    ports:
+    - 9000:9000
+    environment:
+    # CHANGE connection string from .env file
+    - DATABASE_URL=${DATABASE_URL_GEO7630}
+    depends_on:
+    - "pg"
+    restart: always
+  geoserver:
+      image: geosolutionsit/geoserver
+      ports:
+      - 8080:8080
+      environment:
+      - INSTALL_EXTENSIONS=true
+      - STABLE_EXTENSIONS="PGRaster"
 volumes:
   pgdata:
 
